@@ -8,9 +8,10 @@ const NumberSelector = ({
     const arrNumber = [1, 2, 3, 4, 5, 6];
 
     const numberSelectorHandler = (value) => {
-        setSelectedNumber();
+        setError("");
+        setSelectedNumber(value);
     };
-
+    
     return (
         <NumberSelectorContainer>
             <p className="error">{error}</p>

@@ -3,14 +3,18 @@ import TotalScore from './TotalScore'
 import NumberSelector from './NumberSelector'
 import styled from 'styled-components';
 import RoleDice from './RoleDice';
+import { Button } from '../styled/Button';
+import Rules from './Rule';
 
 const GamePlay = () => {
-    const [score, setScore] = useState();
+    const [score, setScore] = useState(0);
     const [selectedNumber, setSelectedNumber] = useState();
-    const [currentDice, setCurrentDice] = useState();
+    const [currentDice, setCurrentDice] = useState(1);
+    const [error, setError] = useState();
+    const [showRules, setShowRules] = useState(false);
 
-    const generateRanDomNumber = (min, max) => {
-        return Math.random() * (max - min) + min;
+    const generateRandomNumber = (min, max) => {
+        return Math.floor(Math.random() * (max - min + 1)) + min
     }
 
     const roleDice = () => {
@@ -18,10 +22,10 @@ const GamePlay = () => {
             setError("You have not selected any number");
             return;
         }
-
-        const randomNumber = generateRandomNumber(1, 7);
-        setCurrentDice((prev) => randomNumber);
-
+        setError("");
+        const randomNumber = generateRandomNumber(1, 6);
+        setCurrentDice(randomNumber);
+        console.log(selectedNumber + " , " + randomNumber);
         if (selectedNumber === randomNumber) {
             setScore((prev) => prev + randomNumber);
         } else {
@@ -38,10 +42,18 @@ const GamePlay = () => {
     return (
         <MainContainer>
             <div className='top_section'>
-                <TotalScore></TotalScore>
-                <NumberSelector selectedNumber={selectedNumber} setSelectedNumber={setSelectedNumber}></NumberSelector>
+                <TotalScore score={score}></TotalScore>
+                <NumberSelector selectedNumber={selectedNumber} setSelectedNumber={setSelectedNumber} error={error} setError={setError}></NumberSelector>
             </div>
-            <RoleDice currentDice={setCurrentDice} roleDice={roleDice}></RoleDice>
+            <RoleDice currentDice={currentDice} roleDice={roleDice}></RoleDice>
+            <div className="btns">
+                <Button onClick={resetScore}>Reset Score</Button>
+                <Button onClick={() => setShowRules((prev) => !prev)}>
+                    {showRules ? "Hide" : "Show"} Rules
+                </Button>
+            </div>
+
+            {showRules && <Rules />}
         </MainContainer>
     )
 }
